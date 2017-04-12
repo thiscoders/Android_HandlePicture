@@ -25,7 +25,8 @@ public class SmartImageUtils {
      * @param data    意图
      * @return 图片的拷贝，这个图片就可以随意操作了
      */
-    public static Bitmap getImage(Context context, Intent data) {
+    public static Object[] getImage(Context context, Intent data) {
+        Object[] objs = new Object[2];
         Uri picUri = data.getData();
         String[] column = new String[]{MediaStore.Images.Media.DATA};
         Cursor cursor = context.getContentResolver().query(picUri, column, null, null, null);
@@ -34,10 +35,18 @@ public class SmartImageUtils {
             picPath = cursor.getString(cursor.getColumnIndex(column[0]));
         }
         cursor.close();
-        Bitmap srcBitmap = BitmapFactory.decodeFile(picPath); //获取原图
-        return getCopyImage(srcBitmap);
+        Bitmap srcBitmap = BitmapFactory.decodeFile(picPath);
+        objs[0] = getCopyImage(srcBitmap);
+        objs[1] = picPath;
+        return objs;//返回了2个信息，需要拆分
     }
 
+    /**
+     * 获取文件副本
+     *
+     * @param srcBitmap
+     * @return
+     */
     public static Bitmap getCopyImage(Bitmap srcBitmap) {
         //获取图片的空白副本
         Bitmap copyBitmap = Bitmap.createBitmap(srcBitmap.getWidth(), srcBitmap.getHeight(), srcBitmap.getConfig());
@@ -45,6 +54,31 @@ public class SmartImageUtils {
         Paint paint = new Paint();
         Matrix matrix = new Matrix();
         canvas.drawBitmap(srcBitmap, matrix, paint);
+        return copyBitmap;
+    }
+
+    /**
+     * 旋转图片
+     *
+     * @param srcBitmap
+     * @param angle
+     * @return
+     */
+    public static Bitmap scaleImage(Bitmap srcBitmap, int angle) {
+
+        //创建原图的副本
+        Bitmap copyBitmap = Bitmap.createBitmap(srcBitmap.getWidth(), srcBitmap.getHeight(), srcBitmap.getConfig());
+
+        Canvas canvas = new Canvas(copyBitmap);
+
+        Paint paint = new Paint();
+
+        Matrix matrix = new Matrix();
+
+        matrix.setRotate(angle, copyBitmap.getWidth() / 2, copyBitmap.getHeight() / 2);
+
+        canvas.drawBitmap(srcBitmap, matrix, paint);
+
         return copyBitmap;
     }
 }
