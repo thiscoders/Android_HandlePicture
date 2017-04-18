@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import java.io.File;
+
+import meitu.android.handlepicture.MainActivity;
 
 /**
  * 处理文件的工具类
@@ -26,5 +29,20 @@ public class CommonUtils {
         if (!dir.exists())
             dir.mkdirs();
         return new File(dir, System.currentTimeMillis() + ".jpg");
+    }
+
+    /**
+     * 在对图片操作之前先判断图片是否被选择
+     *
+     * @param context
+     * @param picAbsPath
+     * @return
+     */
+    public static boolean checkPic(Context context, String picAbsPath) {
+        if (picAbsPath == null) {
+            Toast.makeText(context, "请选择图片", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }

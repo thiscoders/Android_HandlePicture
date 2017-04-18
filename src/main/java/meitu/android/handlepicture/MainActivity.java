@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private String tempPath;
     //定义控件
     private ImageView iv_picture;
+    //保存图片进度条
     private ProgressBar pb_save;
     //图片结对路径
     private String picAbsPath;
@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private int angle = 90;
     //定义异步保存任务
     private AsyncSaver asyncSaver;
+    //操作标记 false为未操作
+    private boolean rotateFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
                 pickPic();
                 break;
             case MENU_SAVE_PICTURE:
+                if (handleBitmap == null) {
+                    Toast.makeText(MainActivity.this, "请先选择对图片进行处理", Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 if (asyncSaver != null && asyncSaver.getStatus() == AsyncTask.Status.RUNNING) {
                     asyncSaver.cancel(true);//设置异步任务停止标记
                 }
@@ -141,48 +147,29 @@ public class MainActivity extends AppCompatActivity {
         this.startActivityForResult(intent, this.MENU_TAKE_PICTURE);
     }
 
-    //保存修改后的图片到本地,使用多线程，方式UI线程无响应
-    private void savePicture() {
-        new Thread() {
-            @Override
-            public void run() {
-                File dir = new File("/storage/emulated/0/meitu_pic/handle/");
-                if (!dir.exists())
-                    dir.mkdirs();
-                //将图片保存到sd卡
-                final File file = new File(dir, "handle_" + System.currentTimeMillis() + ".png");
-                try {
-                    FileOutputStream stream = new FileOutputStream(file);
-                    handleBitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MainActivity.this, "图片保存成功！", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }.start();
-    }
-
     //顺时针旋转图片，一次90度
-    public void scalePic(View view) {
-        if (picAbsPath == null) {
-            Toast.makeText(MainActivity.this, "请选择图片", Toast.LENGTH_SHORT).show();
+    public void rotatePic(View view) {
+        if (!CommonUtils.checkPic(MainActivity.this, picAbsPath))
             return;
-        }
         if (angle == 360)
             angle = 0;
         Bitmap bitmap = BitmapFactory.decodeFile(picAbsPath);
-        handleBitmap = SmartImageUtils.scaleImage(bitmap, angle);
+        handleBitmap = SmartImageUtils.rotateImage(bitmap, angle);
         iv_picture.setImageBitmap(handleBitmap);
         angle += 90;
+        rotateFlag = true;
     }
 
+    //缩放图片
+    public void scalePic(View view) {
+        if (!CommonUtils.checkPic(MainActivity.this, picAbsPath))
+            return;
+        Bitmap bitmap = BitmapFactory.decodeFile(picAbsPath);
+        handleBitmap = SmartImageUtils.scaleImage(bitmap, 0.5f, 0.5f);
+        iv_picture.setImageBitmap(handleBitmap);
+    }
 
+    //异步任务保存图片
     private class AsyncSaver extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -200,13 +187,14 @@ public class MainActivity extends AppCompatActivity {
             if (!dir.exists())
                 dir.mkdirs();
             //将图片保存到sd卡
-            File file = new File(dir, "handle_" + System.currentTimeMillis() + ".png");
+            File file = new File(dir, "handle_" + System.currentTimeMillis() + ".jpg");
             try {
                 FileOutputStream stream = new FileOutputStream(file);
                 handleBitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
             } catch (FileNotFoundException e) {
                 Log.e(TAG, e.toString());
             }
+            handleBitmap = null;
             return null;
         }
 

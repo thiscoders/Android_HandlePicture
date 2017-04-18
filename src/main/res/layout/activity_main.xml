@@ -24,12 +24,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="scalePic"
+            android:onClick="rotatePic"
             android:text="旋转" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="scalePic"
             android:text="缩放" />
 
         <Button

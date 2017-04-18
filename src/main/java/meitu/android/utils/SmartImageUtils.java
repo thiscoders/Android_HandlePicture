@@ -64,7 +64,7 @@ public class SmartImageUtils {
      * @param angle
      * @return
      */
-    public static Bitmap scaleImage(Bitmap srcBitmap, int angle) {
+    public static Bitmap rotateImage(Bitmap srcBitmap, int angle) {
 
         //创建原图的副本
         Bitmap copyBitmap = Bitmap.createBitmap(srcBitmap.getWidth(), srcBitmap.getHeight(), srcBitmap.getConfig());
@@ -79,6 +79,26 @@ public class SmartImageUtils {
 
         canvas.drawBitmap(srcBitmap, matrix, paint);
 
+        return copyBitmap;
+    }
+
+    /**
+     * 缩放图片
+     *
+     * @param srcBitmap 原图
+     * @param scaleX    x轴缩放率
+     * @param scaleY    y轴缩放率
+     * @return
+     */
+    public static Bitmap scaleImage(Bitmap srcBitmap, float scaleX, float scaleY) {
+        //创建原图的副本
+        Bitmap copyBitmap = Bitmap.createBitmap(srcBitmap.getWidth(), srcBitmap.getHeight(), srcBitmap.getConfig());
+        Canvas canvas = new Canvas(copyBitmap);
+        Paint paint = new Paint();
+        Matrix matrix = new Matrix();
+        matrix.setScale(scaleX, scaleY);
+        //缩放
+        canvas.drawBitmap(srcBitmap, matrix, paint);
         return copyBitmap;
     }
 }
