@@ -14,10 +14,10 @@ public class CommonUtils {
     /**
      * 根据路径创建文件并返回这个文件
      *
-     * @param path
      * @return
      */
     public static File getDownFile() {
+        // TODO: 2017/4/19 此处将图片保存位置写死了，后续再修改 
         String path = "/storage/emulated/0/meitu_pic/";
         File dir = new File(path);
         if (!dir.exists())
@@ -32,7 +32,7 @@ public class CommonUtils {
      * @param picAbsPath
      * @return
      */
-    public static boolean checkPic(Context context, String picAbsPath) {
+    public static boolean checkPicAbsPath(Context context, String picAbsPath) {
         if (picAbsPath == null) {
             Toast.makeText(context, "请选择图片", Toast.LENGTH_SHORT).show();
             return false;

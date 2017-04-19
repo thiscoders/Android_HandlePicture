@@ -19,22 +19,25 @@ import android.provider.MediaStore;
 public class SmartImageUtils {
 
     /**
-     * 获取图片的拷贝
+     * 取出数据
      *
      * @param context 上下文
      * @param data    意图
      * @return 图片的拷贝，这个图片就可以随意操作了
      */
     public static Object[] getImage(Context context, Intent data) {
-        Object[] objs = new Object[2];
+        Object[] objs = new Object[2]; //定义返回数据，数据保存了bitmap图片和图片的路径
+
         Uri picUri = data.getData();
         String[] column = new String[]{MediaStore.Images.Media.DATA};
         Cursor cursor = context.getContentResolver().query(picUri, column, null, null, null);
+
         String picPath = null;
         while (cursor.moveToNext()) {
             picPath = cursor.getString(cursor.getColumnIndex(column[0]));
         }
         cursor.close();
+        //将图片转化成bitmap
         Bitmap srcBitmap = BitmapFactory.decodeFile(picPath);
         objs[0] = getCopyImage(srcBitmap);
         objs[1] = picPath;
@@ -50,9 +53,13 @@ public class SmartImageUtils {
     public static Bitmap getCopyImage(Bitmap srcBitmap) {
         //获取图片的空白副本
         Bitmap copyBitmap = Bitmap.createBitmap(srcBitmap.getWidth(), srcBitmap.getHeight(), srcBitmap.getConfig());
+        //创建画布
         Canvas canvas = new Canvas(copyBitmap);
+        //创建画笔
         Paint paint = new Paint();
+        //图形矩阵
         Matrix matrix = new Matrix();
+        //开始填充内容
         canvas.drawBitmap(srcBitmap, matrix, paint);
         return copyBitmap;
     }
