@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eeee11"
     tools:context="meitu.android.handlepicture.MainActivity">
 
 
@@ -12,15 +10,18 @@
         android:id="@+id/iv_picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_centerHorizontal="true"
+        android:background="#00ee22" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#11eeff"
+        android:background="#ffaec9"
         android:orientation="horizontal">
 
+       
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,8 +37,20 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="reversalPic"
             android:text="翻转" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="drawPic"
+            android:text="涂鸦" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="resetPic"
+            android:text="重置" />
     </LinearLayout>
 
     <ProgressBar

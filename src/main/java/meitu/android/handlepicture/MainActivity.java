@@ -30,8 +30,14 @@ public class MainActivity extends AppCompatActivity {
     private final int MENU_TAKE_PICTURE = 0;
     private final int MENU_OPEN_PICTURE = 1;
     private final int MENU_SAVE_PICTURE = 2;
-    private final int MENU_HANDLE_PICTURE = 3;
-    private final int MENU_ABOUT_APP = 4;
+    private final int MENU_ABOUT_APP = 3;
+
+    //按钮开启Activity识别码
+    private final int BTN_CUT_APP = 10;
+    private final int BTN_ROTATE_APP = 20;
+    private final int BTN_SCALE_APP = 30;
+    private final int BTN_REVERSAL_APP = 40;
+    private final int BTN_DRAW_APP = 50;
     //处理过的最新图片
     private Bitmap handleBitmap;
     //图片路径
@@ -47,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
     //定义异步保存任务
     private AsyncSaver asyncSaver;
     //操作标记 false为未操作
-    private boolean rotateFlag = false;
+    private boolean scaleFlag = false; //缩放标记
+    private boolean rotateFlag = false; //旋转标记
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         iv_picture = (ImageView) this.findViewById(R.id.iv_picture);
         pb_save = (ProgressBar) this.findViewById(R.id.pb_save);
-
-        asyncSaver = new AsyncSaver();
     }
 
     @Override
@@ -64,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
         menu.add(0, MENU_TAKE_PICTURE, 0, "现拍一张");
         menu.add(1, MENU_OPEN_PICTURE, 1, "打开图片");
         menu.add(2, MENU_SAVE_PICTURE, 2, "保存图片");
-        menu.add(3, MENU_HANDLE_PICTURE, 3, "处理图片");
-        menu.add(4, MENU_ABOUT_APP, 4, "关于软件");
+        menu.add(3, MENU_ABOUT_APP, 3, "关于软件");
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -79,17 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 pickPic();
                 break;
             case MENU_SAVE_PICTURE:
-                if (handleBitmap == null) {
-                    Toast.makeText(MainActivity.this, "请先选择对图片进行处理", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                if (asyncSaver != null && asyncSaver.getStatus() == AsyncTask.Status.RUNNING) {
-                    asyncSaver.cancel(true);//设置异步任务停止标记
-                }
-                new AsyncSaver().execute();
-                break;
-            case MENU_HANDLE_PICTURE:
-                Toast.makeText(MainActivity.this, "处理图片", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "保存图片", Toast.LENGTH_SHORT).show();
                 break;
             case MENU_ABOUT_APP:
                 Intent intent = new Intent(MainActivity.this, AboutActivity.class);
@@ -107,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Object[] objs = SmartImageUtils.getImage(MainActivity.this, data);//这个图片是可以直接操作的,同时记录绝对路径
                 Bitmap bitmap = (Bitmap) objs[0];
-                picAbsPath = (String) objs[1];
+                picAbsPath = (String) objs[1];  //记录绝对路径
                 iv_picture.setImageBitmap(bitmap);
             } else {
                 Toast.makeText(MainActivity.this, "no picture!", Toast.LENGTH_LONG).show();
@@ -147,26 +141,52 @@ public class MainActivity extends AppCompatActivity {
         this.startActivityForResult(intent, this.MENU_TAKE_PICTURE);
     }
 
-    //顺时针旋转图片，一次90度
+    //裁切
+    public void cutPic(View view) {
+        if (!CommonUtils.checkPic(MainActivity.this, picAbsPath))
+            return;
+        Intent intent = new Intent(MainActivity.this, CutActivity.class);
+        this.startActivityForResult(intent, BTN_CUT_APP);
+    }
+
+    //旋转
     public void rotatePic(View view) {
         if (!CommonUtils.checkPic(MainActivity.this, picAbsPath))
             return;
-        if (angle == 360)
-            angle = 0;
-        Bitmap bitmap = BitmapFactory.decodeFile(picAbsPath);
-        handleBitmap = SmartImageUtils.rotateImage(bitmap, angle);
-        iv_picture.setImageBitmap(handleBitmap);
-        angle += 90;
-        rotateFlag = true;
+        Intent intent = new Intent(MainActivity.this, RotateActivity.class);
+        this.startActivityForResult(intent, BTN_ROTATE_APP);
+
     }
 
-    //缩放图片
+    //缩放
     public void scalePic(View view) {
         if (!CommonUtils.checkPic(MainActivity.this, picAbsPath))
             return;
-        Bitmap bitmap = BitmapFactory.decodeFile(picAbsPath);
-        handleBitmap = SmartImageUtils.scaleImage(bitmap, 0.5f, 0.5f);
-        iv_picture.setImageBitmap(handleBitmap);
+        Intent intent = new Intent(MainActivity.this, ScaleActivity.class);
+        this.startActivityForResult(intent, BTN_SCALE_APP);
+    }
+
+    //翻转
+    public void reversalPic(View view) {
+        if (!CommonUtils.checkPic(MainActivity.this, picAbsPath))
+            return;
+        Intent intent = new Intent(MainActivity.this, ReversalActivity.class);
+        this.startActivityForResult(intent, BTN_REVERSAL_APP);
+    }
+
+    //涂鸦
+    public void drawPic(View view) {
+        if (!CommonUtils.checkPic(MainActivity.this, picAbsPath))
+            return;
+        Intent intent = new Intent(MainActivity.this, DrawActivity.class);
+        this.startActivityForResult(intent, BTN_DRAW_APP);
+    }
+
+    //重置图片
+    public void resetPic(View view) {
+        if (!CommonUtils.checkPic(MainActivity.this, picAbsPath))
+            return;
+        Toast.makeText(MainActivity.this, "重置图片", Toast.LENGTH_SHORT).show();
     }
 
     //异步任务保存图片

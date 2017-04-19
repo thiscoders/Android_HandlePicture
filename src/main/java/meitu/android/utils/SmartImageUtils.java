@@ -65,7 +65,6 @@ public class SmartImageUtils {
      * @return
      */
     public static Bitmap rotateImage(Bitmap srcBitmap, int angle) {
-
         //创建原图的副本
         Bitmap copyBitmap = Bitmap.createBitmap(srcBitmap.getWidth(), srcBitmap.getHeight(), srcBitmap.getConfig());
 
