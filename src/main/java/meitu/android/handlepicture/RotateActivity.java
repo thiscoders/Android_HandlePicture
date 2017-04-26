@@ -29,11 +29,10 @@ import meitu.android.utils.SmartImageUtils;
 public class RotateActivity extends AppCompatActivity {
     private final String TAG = RotateActivity.class.getSimpleName();
     private ImageView iv_rotate;
-    private String srcPath;
-    private Bitmap resBitmap;
-    private ProgressBar pb_rotate;
-    private AlertDialog dialog;
-
+    private String srcPath; //待处理的图片地址
+    private Bitmap resBitmap; //处理完成后返回的图片
+    private ProgressBar pb_rotate; //保存修改进度条
+    private AlertDialog dialog; //输入旋转角度的对话框
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class RotateActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    int num = Integer.parseInt(et.getText().toString());
+                    float num = Float.parseFloat(et.getText().toString());
                     resBitmap = SmartImageUtils.rotateImage(srcPath, num);
                     iv_rotate.setImageBitmap(resBitmap);
                 } catch (Exception e) {
@@ -95,5 +94,9 @@ public class RotateActivity extends AppCompatActivity {
         intent.putExtra("rotatePath", imagePath);
         setResult(200, intent);
         dialog = null;
+    }
+
+    public void backRotate(View view) {
+        finish();
     }
 }

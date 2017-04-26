@@ -46,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
     //图片绝对路径
     private String picAbsPath;
 
-    private ImageSaver imageSaver;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case MENU_SAVE_PICTURE:
                 Bitmap bitmap = BitmapFactory.decodeFile(picAbsPath);
-                imageSaver = new ImageSaver(MainActivity.this, bitmap, "", pb_save);
+                ImageSaver imageSaver = new ImageSaver(MainActivity.this, bitmap, getString(R.string.global_path) + "/" + System.currentTimeMillis() + ".jpg", pb_save);
                 imageSaver.execute();
                 break;
             case MENU_ABOUT_APP:

@@ -14,6 +14,12 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="backRotate"
+            android:text="返回" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="beginRotate"
             android:text="旋转" />
 
@@ -34,7 +40,9 @@
         android:id="@+id/iv_rotate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_above="@+id/ll_func"
+        android:layout_centerInParent="true"
+        android:background="#ff33ff" />
 
     <ProgressBar
         android:id="@+id/pb_rotate"

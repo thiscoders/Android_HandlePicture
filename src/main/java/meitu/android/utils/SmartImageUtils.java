@@ -19,7 +19,7 @@ import android.provider.MediaStore;
 public class SmartImageUtils {
 
     /**
-     * 取出数据
+     * 从系统相册中选取数据
      *
      * @param context 上下文
      * @param data    意图
@@ -67,11 +67,11 @@ public class SmartImageUtils {
     /**
      * 旋转图片
      *
-     * @param srcBitmap
+     * @param srcPath
      * @param angle
      * @return
      */
-    public static Bitmap rotateImage(String srcPath, int angle) {
+    public static Bitmap rotateImage(String srcPath, float angle) {
         Bitmap srcBitmap = BitmapFactory.decodeFile(srcPath);
         //创建原图的副本
         Bitmap copyBitmap = Bitmap.createBitmap(srcBitmap.getWidth(), srcBitmap.getHeight(), srcBitmap.getConfig());
@@ -92,12 +92,13 @@ public class SmartImageUtils {
     /**
      * 缩放图片
      *
-     * @param srcBitmap 原图
-     * @param scaleX    x轴缩放率
-     * @param scaleY    y轴缩放率
+     * @param srcPath 原图
+     * @param scaleX  x轴缩放率
+     * @param scaleY  y轴缩放率
      * @return
      */
-    public static Bitmap scaleImage(Bitmap srcBitmap, float scaleX, float scaleY) {
+    public static Bitmap scaleImage(String srcPath, float scaleX, float scaleY) {
+        Bitmap srcBitmap = BitmapFactory.decodeFile(srcPath);
         //创建原图的副本
         Bitmap copyBitmap = Bitmap.createBitmap(srcBitmap.getWidth(), srcBitmap.getHeight(), srcBitmap.getConfig());
         Canvas canvas = new Canvas(copyBitmap);
@@ -108,4 +109,16 @@ public class SmartImageUtils {
         canvas.drawBitmap(srcBitmap, matrix, paint);
         return copyBitmap;
     }
+
+    /**
+     * 自动缩放
+     *
+     * @param srcPath 原图片路径
+     * @param scales  缩放率
+     * @return 缩放完成的图片
+     */
+    public static Bitmap autoScale(String srcPath, float scales) {
+        return null;
+    }
+
 }

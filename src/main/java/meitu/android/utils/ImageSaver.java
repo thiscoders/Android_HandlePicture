@@ -25,6 +25,7 @@ public class ImageSaver extends AsyncTask<Void, Void, Void> {
     private View view;
 
     private ActivityHelper activityHelper;
+    private Boolean isCall = false;
 
     public ImageSaver(Context context, Bitmap bitmap, String path, View view) {
         this.context = context;
@@ -35,6 +36,7 @@ public class ImageSaver extends AsyncTask<Void, Void, Void> {
 
     public void setMethod(ActivityHelper activityHelper) {
         this.activityHelper = activityHelper;
+        this.isCall = true;
     }
 
     @Override
@@ -68,6 +70,7 @@ public class ImageSaver extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         view.setVisibility(View.INVISIBLE);
         Toast.makeText(context, "图片保存成功！", Toast.LENGTH_SHORT).show();
-        this.activityHelper.finishOK();
+        if (this.isCall)
+            this.activityHelper.finishOK();
     }
 }

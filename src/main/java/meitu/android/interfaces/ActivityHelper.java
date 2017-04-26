@@ -6,6 +6,6 @@ package meitu.android.interfaces;
  */
 
 public interface ActivityHelper {
-    //完成activity的关闭
+    //完成activity的延时关闭
     public void finishOK();
 }
