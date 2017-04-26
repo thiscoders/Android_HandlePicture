@@ -13,12 +13,9 @@ import java.io.File;
 public class CommonUtils {
     /**
      * 根据路径创建文件并返回这个文件
-     *
      * @return
      */
-    public static File getDownFile() {
-        // TODO: 2017/4/19 此处将图片保存位置写死了，后续再修改 
-        String path = "/storage/emulated/0/meitu_pic/";
+    public static File getTakePicFile(String path) {
         File dir = new File(path);
         if (!dir.exists())
             dir.mkdirs();

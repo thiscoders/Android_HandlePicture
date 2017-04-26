@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import meitu.android.interfaces.ActivityHelper;
+
 /**
  * Created by ye on 2017/4/19.
  */
@@ -19,12 +21,20 @@ public class ImageSaver extends AsyncTask<Void, Void, Void> {
 
     private Context context;
     private Bitmap bitmap;
+    private String path;
     private View view;
 
-    public ImageSaver(Context context, Bitmap bitmap, View view) {
+    private ActivityHelper activityHelper;
+
+    public ImageSaver(Context context, Bitmap bitmap, String path, View view) {
         this.context = context;
         this.bitmap = bitmap;
+        this.path = path;
         this.view = view;
+    }
+
+    public void setMethod(ActivityHelper activityHelper) {
+        this.activityHelper = activityHelper;
     }
 
     @Override
@@ -38,19 +48,18 @@ public class ImageSaver extends AsyncTask<Void, Void, Void> {
         if (isCancelled()) { //获取状态，完成异步任务
             return null;
         }
-        // TODO: 2017/4/19 此处也将路径写死了，后续修改
-        File dir = new File("/storage/emulated/0/meitu_pic/handle/");
+        String ppath = this.path.substring(0, this.path.lastIndexOf('/'));
+        File dir = new File(ppath);
         if (!dir.exists())
             dir.mkdirs();
         //将图片保存到sd卡
-        File file = new File(dir, "handle_" + System.currentTimeMillis() + ".jpg");
+        File file = new File(this.path);
         try {
             FileOutputStream stream = new FileOutputStream(file);
             this.bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
         } catch (FileNotFoundException e) {
             Log.e(TAG, e.toString());
         }
-        this.bitmap = null;
         return null;
     }
 
@@ -59,5 +68,6 @@ public class ImageSaver extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         view.setVisibility(View.INVISIBLE);
         Toast.makeText(context, "图片保存成功！", Toast.LENGTH_SHORT).show();
+        this.activityHelper.finishOK();
     }
 }
