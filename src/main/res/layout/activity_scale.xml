@@ -3,11 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <ImageView
+        android:id="@+id/iv_scale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="缩放图片"
-        android:textSize="20dp" />
+        android:layout_centerInParent="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="beginScale"
+            android:text="放缩" />
+    </LinearLayout>
 
 </RelativeLayout>

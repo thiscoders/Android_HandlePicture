@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case MENU_SAVE_PICTURE:
                 Bitmap bitmap = BitmapFactory.decodeFile(picAbsPath);
-                imageSaver = new ImageSaver(MainActivity.this, bitmap, pb_save);
+                imageSaver = new ImageSaver(MainActivity.this, bitmap, "", pb_save);
                 imageSaver.execute();
                 break;
             case MENU_ABOUT_APP:
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //Activity返回结果处理
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -101,14 +103,19 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (requestCode == MENU_TAKE_PICTURE) { //现拍照片
             if (resultCode == RESULT_OK) {
-                if (CommonUtils.checkPicAbsPath(MainActivity.this, picAbsPath))
-                    return;
                 Bitmap srcBitmap = BitmapFactory.decodeFile(picAbsPath);
                 Bitmap copyBitmap = SmartImageUtils.getCopyImage(srcBitmap);// 拷贝的图片，这个图片可以直接修改
-                iv_picture.setImageBitmap(copyBitmap);
+                iv_picture.setImageBitmap(srcBitmap);
             } else {
                 Toast.makeText(MainActivity.this, "取消拍照", Toast.LENGTH_LONG).show();
             }
+        } else if (resultCode == 200) {
+            String tempPath = data.getStringExtra("rotatePath");
+            Log.i(TAG, "旋转回来..." + tempPath);
+            if (tempPath != null)
+                picAbsPath = tempPath;
+            handleBitmap = BitmapFactory.decodeFile(picAbsPath);
+            iv_picture.setImageBitmap(handleBitmap);
         }
     }
 
@@ -122,7 +129,8 @@ public class MainActivity extends AppCompatActivity {
     //开启相机拍照界面
     private void takePictureByCamera() {
         //创建拍照照片保存位置
-        File file = CommonUtils.getDownFile();
+        String path = "/storage/emulated/0/meitu_pic/take";
+        File file = CommonUtils.getTakePicFile(path);
         picAbsPath = file.getAbsolutePath();
         //解决Android N 的 Uri.fromFile(file)不兼容的问题
         ContentValues contentValues = new ContentValues(1);
@@ -147,10 +155,10 @@ public class MainActivity extends AppCompatActivity {
     public void rotatePic(View view) {
         if (!CommonUtils.checkPicAbsPath(MainActivity.this, picAbsPath))
             return;
+        Log.i(TAG, "进入旋转..." + picAbsPath);
         Intent intent = new Intent(MainActivity.this, RotateActivity.class);
         intent.putExtra("path", picAbsPath);
         this.startActivityForResult(intent, BTN_ROTATE_APP);
-
     }
 
     //缩放
