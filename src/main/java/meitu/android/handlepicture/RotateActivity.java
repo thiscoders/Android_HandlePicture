@@ -73,6 +73,7 @@ public class RotateActivity extends AppCompatActivity {
 
     public void resetRotate(View view) {
         iv_rotate.setImageBitmap(BitmapFactory.decodeFile(srcPath));
+        resBitmap = null;
     }
 
     public void saveRotate(View view) {

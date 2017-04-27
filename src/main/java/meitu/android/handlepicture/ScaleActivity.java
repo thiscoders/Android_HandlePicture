@@ -74,10 +74,12 @@ public class ScaleActivity extends AppCompatActivity {
 
     public void resetScale(View view) {
         iv_scale.setImageBitmap(BitmapFactory.decodeFile(srcPath));
+        resBitmap = null;
     }
 
     /**
      * 保存修改
+     *
      * @param view
      */
     public void saveScale(View view) {
