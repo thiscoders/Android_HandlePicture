@@ -65,4 +65,16 @@ public class ScaleActivity extends AppCompatActivity {
                 });
         dialog.show();
     }
+
+    public void backMain(View view) {
+        finish();
+    }
+
+    public void resetScale(View view) {
+        iv_scale.setImageBitmap(BitmapFactory.decodeFile(srcPath));
+    }
+
+    public void saveScale(View view) {
+
+    }
 }
