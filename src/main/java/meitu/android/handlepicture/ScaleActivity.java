@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import meitu.android.interfaces.ActivityHelper;
 import meitu.android.utils.DialogFactory;
+import meitu.android.utils.ImageSaver;
 import meitu.android.utils.SmartImageUtils;
 
 /**
@@ -74,7 +76,28 @@ public class ScaleActivity extends AppCompatActivity {
         iv_scale.setImageBitmap(BitmapFactory.decodeFile(srcPath));
     }
 
+    /**
+     * 保存修改
+     * @param view
+     */
     public void saveScale(View view) {
-
+        if (resBitmap == null) {
+            Toast.makeText(ScaleActivity.this, "请先处理图片！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String imagePath = this.getString(R.string.global_path) + "temp/scale.jpg";
+        ImageSaver saver = new ImageSaver(ScaleActivity.this, resBitmap, imagePath, pb_scale);
+        //设置延时关闭activity，保证图片保存完成
+        saver.setMethod(new ActivityHelper() {
+            @Override
+            public void finishOK() {
+                finish();
+            }
+        });
+        saver.execute();
+        Intent intent = new Intent();
+        intent.putExtra("scalePath", imagePath);
+        setResult(300, intent);
+        dialog = null;
     }
 }

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -104,7 +105,8 @@ public class SmartImageUtils {
         Canvas canvas = new Canvas(copyBitmap);
         Paint paint = new Paint();
         Matrix matrix = new Matrix();
-        matrix.setScale(scaleX, scaleY);
+        //从图片的中心点开始放缩
+        matrix.setScale(scaleX, scaleY, copyBitmap.getWidth() / 2, copyBitmap.getHeight() / 2);
         //缩放
         canvas.drawBitmap(srcBitmap, matrix, paint);
         return copyBitmap;
