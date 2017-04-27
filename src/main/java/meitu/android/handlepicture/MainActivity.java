@@ -118,15 +118,20 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(MainActivity.this, "取消拍照", Toast.LENGTH_LONG).show();
             }
-        } else if (resultCode == 200) {
+        } else if (resultCode == 200) { //旋转回来
             String tempPath = data.getStringExtra("rotatePath");
-            Log.i(TAG, "旋转回来..." + tempPath);
             if (tempPath != null)
                 picAbsPath = tempPath;
             handleBitmap = BitmapFactory.decodeFile(picAbsPath);
             iv_picture.setImageBitmap(handleBitmap);
-        } else if (resultCode == 300) {
+        } else if (resultCode == 300) { //缩放回来
             String tempPath = data.getStringExtra("scalePath");
+            if (tempPath != null)
+                picAbsPath = tempPath;
+            handleBitmap = BitmapFactory.decodeFile(picAbsPath);
+            iv_picture.setImageBitmap(handleBitmap);
+        } else if (resultCode == 400) { //翻转回来
+            String tempPath = data.getStringExtra("resersalPath");
             if (tempPath != null)
                 picAbsPath = tempPath;
             handleBitmap = BitmapFactory.decodeFile(picAbsPath);

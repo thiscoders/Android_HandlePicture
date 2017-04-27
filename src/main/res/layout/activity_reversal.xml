@@ -25,8 +25,14 @@
         <Button
             android:layout_width="65dp"
             android:layout_height="wrap_content"
-            android:onClick="beginReversal"
-            android:text="翻转" />
+            android:onClick="horizontalReversal"
+            android:text="水平" />
+
+        <Button
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:onClick="verticalReversal"
+            android:text="竖直" />
 
         <Button
             android:layout_width="65dp"
@@ -45,5 +51,6 @@
         android:id="@+id/pb_resersal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
 </RelativeLayout>

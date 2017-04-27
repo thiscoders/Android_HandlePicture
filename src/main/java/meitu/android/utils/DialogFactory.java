@@ -24,7 +24,8 @@ public class DialogFactory {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(content);
-        builder.setView(view);
+        if (view != null)
+            builder.setView(view);
         //添加响应事件
         builder.setPositiveButton("确定", positive);
         builder.setNegativeButton("取消", negative);
