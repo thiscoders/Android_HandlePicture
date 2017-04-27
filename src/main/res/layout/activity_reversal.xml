@@ -13,12 +13,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="#53d545"
         android:orientation="horizontal">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:onClick="backReversal"
+            android:text="返回" />
+
+        <Button
+            android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:onClick="beginReversal"
             android:text="翻转" />
+
+        <Button
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:onClick="resetReversal"
+            android:text="重置" />
+
+        <Button
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:onClick="saveReversal"
+            android:text="保存" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_resersal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 </RelativeLayout>

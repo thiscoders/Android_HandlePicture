@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private final int MENU_TAKE_PICTURE = 0;
     private final int MENU_OPEN_PICTURE = 1;
     private final int MENU_SAVE_PICTURE = 2;
-    private final int MENU_ABOUT_APP = 3;
+    private final int MENU_RESET_PIC = 3;
+    private final int MENU_ABOUT_APP = 4;
 
     //按钮开启Activity识别码
     private final int BTN_CUT_APP = 10;
@@ -59,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
         menu.add(0, MENU_TAKE_PICTURE, 0, "现拍一张");
         menu.add(1, MENU_OPEN_PICTURE, 1, "打开图片");
         menu.add(2, MENU_SAVE_PICTURE, 2, "保存图片");
-        menu.add(3, MENU_ABOUT_APP, 3, "关于软件");
+        menu.add(3, MENU_RESET_PIC, 3, "重置图片");
+        menu.add(4, MENU_ABOUT_APP, 4, "关于软件");
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -84,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
             case MENU_ABOUT_APP:
                 Intent intent = new Intent(MainActivity.this, AboutActivity.class);
                 this.startActivity(intent);
+                break;
+            case MENU_RESET_PIC:
+                if (!CommonUtils.checkPicAbsPath(MainActivity.this, picAbsPath))
+                    break;
+                Toast.makeText(MainActivity.this, "重置图片", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -196,11 +203,11 @@ public class MainActivity extends AppCompatActivity {
         this.startActivityForResult(intent, BTN_DRAW_APP);
     }
 
-    //重置图片
+    //重置
     public void resetPic(View view) {
         if (!CommonUtils.checkPicAbsPath(MainActivity.this, picAbsPath))
             return;
         Toast.makeText(MainActivity.this, "重置图片", Toast.LENGTH_SHORT).show();
+        return;
     }
-
 }

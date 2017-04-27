@@ -3,46 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/iv_rotate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
     <LinearLayout
         android:id="@+id/ll_func"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="#00a2e8"
         android:orientation="horizontal">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:onClick="backRotate"
             android:text="返回" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:onClick="beginRotate"
             android:text="旋转" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:onClick="resetRotate"
             android:text="重置" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:onClick="saveRotate"
             android:text="确定" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/iv_rotate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/ll_func"
-        android:layout_centerInParent="true"
-        android:background="#ff33ff" />
 
     <ProgressBar
         android:id="@+id/pb_rotate"
