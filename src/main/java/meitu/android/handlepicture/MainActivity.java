@@ -73,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
                 pickPic();
                 break;
             case MENU_SAVE_PICTURE:
+                if (picAbsPath == null) {
+                    Toast.makeText(MainActivity.this, "请先选择图片！", Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 Bitmap bitmap = BitmapFactory.decodeFile(picAbsPath);
                 ImageSaver imageSaver = new ImageSaver(MainActivity.this, bitmap, getString(R.string.global_path) + "/" + System.currentTimeMillis() + ".jpg", pb_save);
                 imageSaver.execute();
@@ -110,6 +114,12 @@ public class MainActivity extends AppCompatActivity {
         } else if (resultCode == 200) {
             String tempPath = data.getStringExtra("rotatePath");
             Log.i(TAG, "旋转回来..." + tempPath);
+            if (tempPath != null)
+                picAbsPath = tempPath;
+            handleBitmap = BitmapFactory.decodeFile(picAbsPath);
+            iv_picture.setImageBitmap(handleBitmap);
+        } else if (resultCode == 300) {
+            String tempPath = data.getStringExtra("scalePath");
             if (tempPath != null)
                 picAbsPath = tempPath;
             handleBitmap = BitmapFactory.decodeFile(picAbsPath);
