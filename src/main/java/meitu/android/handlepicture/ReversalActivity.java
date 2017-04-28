@@ -24,6 +24,7 @@ public class ReversalActivity extends AppCompatActivity {
     private ProgressBar pb_resersal;
 
     private String srcPath; //待处理的图片地址
+    private Bitmap srcBitmap; //源图片
     private Bitmap resBitmap; //处理完成后返回的图片
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,8 @@ public class ReversalActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         srcPath = (String) intent.getExtras().get("path");
-        iv_reversal.setImageBitmap(BitmapFactory.decodeFile(srcPath));
+        srcBitmap = BitmapFactory.decodeFile(srcPath);
+        iv_reversal.setImageBitmap(srcBitmap);
     }
 
     //返回
@@ -44,14 +46,16 @@ public class ReversalActivity extends AppCompatActivity {
 
     //水平翻转
     public void horizontalReversal(View view) {
-        resBitmap = SmartImageUtils.resersalImage(srcPath, true);
-        iv_reversal.setImageBitmap(resBitmap);
+        srcBitmap = SmartImageUtils.resersalImage(srcBitmap, true, -1);
+        iv_reversal.setImageBitmap(srcBitmap);
+        resBitmap = srcBitmap;
     }
 
     //竖直翻转
     public void verticalReversal(View view) {
-        resBitmap = SmartImageUtils.resersalImage(srcPath, false);
-        iv_reversal.setImageBitmap(resBitmap);
+        srcBitmap = SmartImageUtils.resersalImage(srcBitmap, false, -1);
+        iv_reversal.setImageBitmap(srcBitmap);
+        resBitmap = srcBitmap;
     }
 
     //重置

@@ -126,22 +126,21 @@ public class SmartImageUtils {
     /**
      * 翻转图片
      *
-     * @param srcPath 图片的原地址
-     * @param flag    翻转标记
+     * @param srcBitmap 原图片
+     * @param flag      翻转标记 true 水平 / false 竖直
      * @return 处理好的图片
      */
-    public static Bitmap resersalImage(String srcPath, boolean flag) {
-        Bitmap srcBitmap = BitmapFactory.decodeFile(srcPath);
+    public static Bitmap resersalImage(Bitmap srcBitmap, boolean flag, int operate) {
         //创建原图的副本
         Bitmap copyBitmap = Bitmap.createBitmap(srcBitmap.getWidth(), srcBitmap.getHeight(), srcBitmap.getConfig());
         Canvas canvas = new Canvas(copyBitmap);
         Paint paint = new Paint();
         Matrix matrix = new Matrix();
         if (flag) { //水平翻转
-            matrix.setScale(-1, 1);
+            matrix.setScale(operate, 1);
             matrix.postTranslate(copyBitmap.getWidth(), 0);
         } else { //竖直翻转
-            matrix.setScale(1, -1);
+            matrix.setScale(1, operate);
             matrix.postTranslate(0, copyBitmap.getHeight());
         }
         canvas.drawBitmap(srcBitmap, matrix, paint);
