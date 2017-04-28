@@ -1,22 +1,26 @@
 package meitu.android.handlepicture;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import meitu.android.interfaces.ActivityHelper;
+import meitu.android.utils.ColorPickerDialog;
+import meitu.android.utils.DialogFactory;
 import meitu.android.utils.ImageSaver;
 import meitu.android.utils.SmartImageUtils;
 
@@ -25,6 +29,9 @@ import meitu.android.utils.SmartImageUtils;
  */
 public class DrawActivity extends AppCompatActivity {
     private final String TAG = DrawActivity.class.getSimpleName();
+
+    private ColorPickerDialog colorDialog;
+    private AlertDialog sizeDialog;
 
     private ImageView iv_draw;
     private ProgressBar pb_draw;
@@ -48,14 +55,17 @@ public class DrawActivity extends AppCompatActivity {
         srcBitmap = BitmapFactory.decodeFile(srcPath);
         //获取图片的副本开始操作
         copyBitmap = SmartImageUtils.getCopyImage(srcBitmap);
+        //创建画布
         canvas = new Canvas(copyBitmap);
-
+        //定义画笔
         paint = new Paint();
-        paint.setStrokeWidth(20);
+        paint.setColor(Color.YELLOW);
+        paint.setStrokeWidth(6);
 
         iv_draw.setImageBitmap(copyBitmap);
 
-        iv_draw.setOnTouchListener(listener);
+        iv_draw.setOnTouchListener(listener); //设置触摸监听
+
         Toast.makeText(this, "你随时可以开始涂鸦！", Toast.LENGTH_SHORT).show();
     }
 
@@ -64,9 +74,43 @@ public class DrawActivity extends AppCompatActivity {
         finish();
     }
 
-    //设置画笔
-    public void setPaint(View view) {
-        Toast.makeText(this, "画笔", Toast.LENGTH_SHORT).show();
+    //设置画笔颜色
+    public void setPaintColor(View view) {
+        colorDialog = new ColorPickerDialog(DrawActivity.this, paint.getColor(), "选择颜色", new ColorPickerDialog.OnColorChangedListener() {
+            @Override
+            public void colorChanged(int color) {
+                paint.setColor(color);
+            }
+        });
+        colorDialog.show();
+    }
+
+    //设置画笔尺寸
+    public void setPaintSize(View view) {
+        final NumberPicker np_size = new NumberPicker(DrawActivity.this);
+        np_size.setMinValue(2);
+        np_size.setMaxValue(50);
+        np_size.setValue((int) paint.getStrokeWidth());
+        sizeDialog = DialogFactory.generateDialog(DrawActivity.this, this.getString(R.string.dialog_paint_size_title), this.getString(R.string.dialog_paint_size_content), np_size,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            int size = np_size.getValue();
+                            if (size <= 0)
+                                throw new Exception();
+                            paint.setStrokeWidth(size);
+                        } catch (Exception e) {
+                            Toast.makeText(DrawActivity.this, "你输入的数字有误！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        sizeDialog.show();
     }
 
     //重置
@@ -74,7 +118,8 @@ public class DrawActivity extends AppCompatActivity {
         copyBitmap = SmartImageUtils.getCopyImage(srcBitmap);
         canvas = new Canvas(copyBitmap);
         paint = new Paint();
-        paint.setStrokeWidth(20);
+        paint.setColor(Color.YELLOW);
+        paint.setStrokeWidth(6);
         iv_draw.setImageBitmap(copyBitmap);
         isOperate = false;
         Toast.makeText(DrawActivity.this, "重置", Toast.LENGTH_SHORT).show();
@@ -101,17 +146,19 @@ public class DrawActivity extends AppCompatActivity {
         setResult(500, intent);
     }
 
-    /**
-     * 触摸监听事件
-     */
+    // 触摸监听事件
     private View.OnTouchListener listener = new View.OnTouchListener() {
         private float startX;
         private float startY;
         private float stopX;
         private float stopY;
 
+        private float limit;
+
         @Override
         public boolean onTouch(View v, MotionEvent motionEvent) {
+            limit = paint.getStrokeWidth() / 2;
+
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     startX = motionEvent.getX();
@@ -121,8 +168,16 @@ public class DrawActivity extends AppCompatActivity {
                     stopX = motionEvent.getX();
                     stopY = motionEvent.getY();
 
-                    Log.i(TAG, "lala==>>" + startX + "," + startY + "|||||" + stopX + "," + stopY);
-                    canvas.drawLine(startX, startY, stopX, stopY, paint);
+                    for (float i = -limit; i < limit; i++) {
+                        for (float j = -limit; j < limit; j++) {
+                            if (Math.sqrt(i * i + j * j) < limit) {//加上这个判断的话，触摸笔迹是一个圆，不加则为矩形
+                                Log.i(TAG, "lala==>>" + startX + "," + startY + "|||||" + stopX + "," + stopY);
+                                copyBitmap.setPixel((int) (motionEvent.getX() + i), (int) (motionEvent.getY() + j), paint.getColor());
+                                canvas.drawLine(startX, startY, stopX, stopY, paint);
+                            }
+                        }
+                    }
+
 
                     iv_draw.setImageBitmap(copyBitmap);
 

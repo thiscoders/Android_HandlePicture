@@ -5,4 +5,8 @@
     <string name="dialog_rotate_content">请输入旋转角度</string>
     <string name="dialog_scale_title">放缩图片</string>
     <string name="dialog_scale_content">请输入缩放率</string>
+    <string name="dialog_paint_color_title">画笔颜色</string>
+    <string name="dialog_paint_color_content">请输入画笔颜色</string>
+    <string name="dialog_paint_size_title">画笔尺寸</string>
+    <string name="dialog_paint_size_content">请选择画笔尺寸</string>
 </resources>
