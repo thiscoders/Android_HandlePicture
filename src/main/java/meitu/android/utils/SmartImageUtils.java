@@ -46,7 +46,7 @@ public class SmartImageUtils {
     }
 
     /**
-     * 获取文件副本
+     * 获取图片的副本
      *
      * @param srcBitmap
      * @return

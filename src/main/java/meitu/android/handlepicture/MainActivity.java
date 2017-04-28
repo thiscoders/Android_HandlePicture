@@ -136,6 +136,12 @@ public class MainActivity extends AppCompatActivity {
                 picAbsPath = tempPath;
             handleBitmap = BitmapFactory.decodeFile(picAbsPath);
             iv_picture.setImageBitmap(handleBitmap);
+        } else if (resultCode == 500) { //涂鸦回来
+            String tempPath = data.getStringExtra("drawPath");
+            if (tempPath != null)
+                picAbsPath = tempPath;
+            handleBitmap = BitmapFactory.decodeFile(picAbsPath);
+            iv_picture.setImageBitmap(handleBitmap);
         }
     }
 
